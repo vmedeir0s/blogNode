@@ -1,0 +1,32 @@
+{
+  "name": "blognode",
+  "version": "1.0.0",
+  "description": "Atividade Avaliativa desenvolvida para a disciplina de Programação para Internet",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vmedeir0s/blogNode.git"
+  },
+  "keywords": [
+    "HTTP",
+    "POST",
+    "Node",
+    "Express"
+  ],
+  "author": "Vinicius Mdeiros",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vmedeir0s/blogNode/issues"
+  },
+  "homepage": "https://github.com/vmedeir0s/blogNode#readme",
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "express": "^4.21.2",
+    "nodemon": "^3.1.7"
+  }
+}
