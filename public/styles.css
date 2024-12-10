@@ -143,3 +143,83 @@ button:hover {
 footer {
   padding: 10px 0;
 }
+
+.chatContainer {
+  width: 75vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+
+.chatContainer form select {
+  width: 150px;
+}
+
+.chatContainer form button {
+  margin-top: 20px;
+  float: right;
+}
+
+.chatForm {
+  display: flex;
+  justify-content: space-between;
+}
+
+.chatForm input {
+  width: 350px;
+}
+
+.chatMessages {
+  display: flex;
+  margin-top: 30px;
+  background-color: white;
+  width: 75vw;
+  overflow-y: scroll;
+  padding: 10px;
+  flex-direction: column;
+  height: 500px;
+  gap: 10px;
+}
+
+.containerMessage {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: #cbd5e1;
+  width: 350px;
+  border-radius: 8px;
+  height: 150px;
+  border: 1px solid rgba(0, 0, 0, 0.274);
+  padding: 8px;
+}
+
+.userMessage {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.userMessage img {
+  width: 30px;
+  height: 30px;
+}
+
+.textMessage {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.textMessage p {
+  word-break: break-all;
+  flex-wrap: wrap;
+  overflow-x: auto;
+  height: 70px;
+}
+
+.textMessage span {
+  font-style: italic;
+  color: #334155;
+}

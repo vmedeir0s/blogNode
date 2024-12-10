@@ -10,6 +10,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '/public')));
 
 var usuarios_DB = [];
+var messages_DB = [];
 
 function validarDataNascimento(data) {
   const regex =
@@ -303,6 +304,211 @@ app.get('/listarUsuarios', (req, res) => {
     </html> 
   `);
   res.end();
+});
+
+app.get('/chat', (req, res) => {
+  res.write(`
+    <!DOCTYPE html>
+    <html lang="pt-br">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+          crossorigin="anonymous"
+        />
+        <link rel="stylesheet" href="styles.css" />
+        <title>Blog - Node</title>
+      </head>
+      <body>
+        <header>
+          <a href="/">
+            <div class="containerNavLogo">
+              <img src="chatLogo.png" alt="Logotipo Blog Node" />
+              <p>Blog Node</p>
+            </div>
+          </a>
+          <p class="ultimoAcesso">Ultimo acesso: ${10}</p>
+          <nav>
+            <a href="/cadastroUsuario">Cadastro de Usuários</a>
+            <a href="/chat">Bate-papo</a>
+            <a href="/logout">Sair</a>
+          </nav>
+        </header>
+        <main class="listarUsuarios mt-3">
+          <h1>Sala de Bate-Papo</h1>
+          <div class="chatContainer">
+            <h4>Enviar Mensagem</h4>
+            <form action="/postarMensagem" method="POST">
+              <div class="chatForm">
+                <div>
+                  <label for="user">Usuário</label>
+                  <select id="user" name="user">
+                   <option></option>
+                `);
+  for (let i = 0; i < usuarios_DB.length; i++) {
+    res.write(`
+      <option value="${usuarios_DB[i].nome}" >${usuarios_DB[i].nome}</option>
+    `);
+  }
+  res.write(` 
+                  </select>
+                </div>
+                <div>
+                  <label for="message">Mensagem</label>
+                  <input type="text" id="message" name="message"/>
+                </div>
+              </div>
+              <button>Enviar</button>
+            </form>
+          </div>
+          <div class="chatMessages">`);
+  for (let i = 0; i < messages_DB.length; i++) {
+    res.write(`
+       <div class="containerMessage">
+          <div class="userMessage">
+            <img src="user.png" alt="userIcon"/>
+            <p>${messages_DB[i].user}</p>
+          </div>
+          <div class="textMessage">
+            <p>Mensagem:${messages_DB[i].message}</p>
+            <span>Postado em: ${messages_DB[i].date}</span>
+          </div>
+        </div>
+    `);
+  }
+  res.write(`
+          </div>
+        </main>
+        <footer class="text-center">
+          <p>
+            Desenvolvido por
+            <a href="https://www.github.com/vmedeir0s/" target="_blank"
+              >Vinicius de Medeiros </a
+            >👨‍💻
+          </p>
+        </footer>
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+          crossorigin="anonymous"
+        ></script>
+      </body>
+    </html>  
+
+  `);
+  res.end();
+});
+
+app.post('/postarMensagem', (req, res) => {
+  const { user, message } = req.body;
+  if (user && message) {
+    const msg = {
+      user,
+      message,
+      date: new Date().toLocaleString(),
+    };
+    messages_DB.push(msg);
+    res.redirect('/chat');
+  } else {
+    res.write(`
+      <!DOCTYPE html>
+      <html lang="pt-br">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+            crossorigin="anonymous"
+          />
+          <link rel="stylesheet" href="styles.css" />
+          <title>Blog - Node</title>
+        </head>
+        <body>
+          <header>
+            <a href="/">
+              <div class="containerNavLogo">
+                <img src="chatLogo.png" alt="Logotipo Blog Node" />
+                <p>Blog Node</p>
+              </div>
+            </a>
+            <p class="ultimoAcesso">Ultimo acesso: ${10}</p>
+            <nav>
+              <a href="/cadastroUsuario">Cadastro de Usuários</a>
+              <a href="/chat">Bate-papo</a>
+              <a href="/logout">Sair</a>
+            </nav>
+          </header>
+          <main class="listarUsuarios mt-3">
+            <h1>Sala de Bate-Papo</h1>
+            <div class="chatContainer">
+              <h4>Enviar Mensagem</h4>
+              <form action="/postarMensagem" method="POST">
+                <div class="chatForm">
+                  <div>
+                    <label for="user">Usuário</label>
+                    <select id="user" name="user">
+                      <option></option>
+                  `);
+    for (let i = 0; i < usuarios_DB.length; i++) {
+      res.write(`
+        <option value="${usuarios_DB[i].nome}" >${usuarios_DB[i].nome}</option>
+      `);
+    }
+    res.write(` 
+                    </select>
+                  </div>
+                  <div>
+                    <label for="message">Mensagem</label>
+                    <input type="text" id="message" />
+                  </div>
+                  
+                </div>
+                <span>Não é possivel gravar uma mensagem sem usuário ou conteúdo</span>
+                <button>Enviar</button>
+              </form>
+            </div>
+            <div class="chatMessages">`);
+    for (let i = 0; i < messages_DB.length; i++) {
+      res.write(`
+        <div class="containerMessage">
+          <div class="userMessage">
+            <img src="user.png" alt="userIcon"/>
+            <p>${messages_DB[i].user}</p>
+          </div>
+          <div class="textMessage">
+            <p>${messages_DB[i].message}</p>
+            <span>Postado em: ${messages_DB[i].date}</span>
+          </div>
+        </div>
+      `);
+    }
+    res.write(`
+            </div>
+          </main>
+          <footer class="text-center">
+            <p>
+              Desenvolvido por
+              <a href="https://www.github.com/vmedeir0s/" target="_blank"
+                >Vinicius de Medeiros </a
+              >👨‍💻
+            </p>
+          </footer>
+          <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+            crossorigin="anonymous"
+          ></script>
+        </body>
+      </html>  
+  
+    `);
+    res.end();
+  }
 });
 
 app.get('/', (req, res) => {
