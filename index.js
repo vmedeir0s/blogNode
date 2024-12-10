@@ -147,7 +147,7 @@ app.get('/cadastroUsuario', verificaAutenticacao, (req, res) => {
   res.redirect('/cadastroUsuario.html');
 });
 
-app.post('/cadastrarUsuario', verificaAutenticacao, (req, res) => {
+app.post('/cadastrarUsuario', (req, res) => {
   const { nome, date, nick } = req.body;
   if (nome.length > 3 && validarDataNascimento(date) && nick.length > 3) {
     const user = { nome, date, nick };
@@ -434,7 +434,7 @@ app.get('/chat', verificaAutenticacao, (req, res) => {
   res.end();
 });
 
-app.post('/postarMensagem', verificaAutenticacao, (req, res) => {
+app.post('/postarMensagem', (req, res) => {
   const { user, message } = req.body;
   if (user && message) {
     const msg = {
