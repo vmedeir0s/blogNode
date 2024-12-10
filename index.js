@@ -145,18 +145,23 @@ app.post('/login', (req, res) => {
   }
 });
 
+app.get('/get-cookie', verificaAutenticacao, (req, res) => {
+  const ultimoAcesso = req.cookies['ultimoAcesso'];
+  res.json(ultimoAcesso);
+});
+
 app.get('/cadastroUsuario', verificaAutenticacao, (req, res) => {
   res.redirect('/cadastroUsuario.html');
 });
 
 app.post('/cadastrarUsuario', verificaAutenticacao, (req, res) => {
   const { nome, date, nick } = req.body;
+  const ultimoAcesso = req.cookies['ultimoAcesso'];
   if (nome.length > 3 && validarDataNascimento(date) && nick.length > 3) {
     const user = { nome, date, nick };
     usuarios_DB.push(user);
     res.redirect('/listarUsuarios');
   } else {
-    const ultimoAcesso = req.cookies['ultimoAcesso'];
     res.write(`
       <!DOCTYPE html>
       <html lang="pt-br">
@@ -447,7 +452,7 @@ app.post('/postarMensagem', verificaAutenticacao, (req, res) => {
     messages_DB.push(msg);
     res.redirect('/chat');
   } else {
-    const ultimoAcesso = req.cookies[ultimoAcesso];
+    const ultimoAcesso = req.cookies['ultimoAcesso'];
     res.write(`
       <!DOCTYPE html>
       <html lang="pt-br">
@@ -544,11 +549,6 @@ app.post('/postarMensagem', verificaAutenticacao, (req, res) => {
     `);
     res.end();
   }
-});
-
-app.get('/get-cookie', verificaAutenticacao, (req, res) => {
-  const ultimoAcesso = req.cookies['ultimoAcesso'];
-  res.json(ultimoAcesso);
 });
 
 app.get('/', verificaAutenticacao, (req, res) => {
