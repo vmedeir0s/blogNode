@@ -1,0 +1,145 @@
+*,
+p,
+footer {
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+  color: #1e40af;
+}
+
+a:hover {
+  color: #3b82f6;
+}
+
+body {
+  background-color: #e2e8f0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.315);
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 10px;
+}
+
+.ultimoAcesso {
+  margin-left: 20px;
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+nav a {
+  font-weight: 600;
+}
+
+.loginMain {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loginMain main,
+.mainIndex form {
+  border: 1px solid rgba(0, 0, 0, 0.26);
+  border-radius: 4px;
+  padding: 30px 40px;
+  background-color: white;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.425);
+}
+
+.mainIndex form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.listarUsuarios {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  align-items: center;
+}
+
+.inptGroup {
+  width: 300;
+}
+
+.inptGroup input {
+  width: 350px;
+}
+
+.containerNavLogo {
+  display: flex;
+  align-items: center;
+  font-size: 22px;
+}
+
+.containerNavLogo p {
+  color: #1e40af;
+}
+
+.containerNavLogo img {
+  width: 50px;
+  height: 50px;
+  padding: 8px;
+}
+
+.mainIndex {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  flex-grow: 1;
+}
+
+.containerLogo {
+  display: flex;
+  align-items: center;
+  color: #1e40af;
+  gap: 10px;
+}
+
+.containerLogo img {
+  width: 60px;
+}
+
+span {
+  font-size: 0.875rem;
+  color: #dc3545;
+  margin-top: 0.25rem;
+}
+
+button,
+.button {
+  background-color: #6ee7b7;
+  padding: 8px;
+  border-style: none;
+  border-radius: 8px;
+  color: #1e40af;
+  font-size: 16px;
+  font-weight: 600;
+  width: 180px;
+  text-align: center;
+}
+
+button:hover {
+  background-color: #34d399;
+}
+
+footer {
+  padding: 10px 0;
+}
