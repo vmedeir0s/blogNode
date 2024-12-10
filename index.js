@@ -1,11 +1,13 @@
 import express from 'express';
 import path from 'path';
+import session from 'express-session';
 
 const PORT = 3000;
 
 const app = express();
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '/public')));
 
