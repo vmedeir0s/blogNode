@@ -14,7 +14,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: true,
+      secure: false,
       httpOnly: true,
       maxAge: 1000 * 60 * 30,
     },
@@ -76,6 +76,7 @@ app.post('/login', (req, res) => {
     req.session.usuarioLogado = true;
     res.cookie('ultimoAcesso', new Date().toLocaleString(), {
       maxAge: 1000 * 60 * 60 * 24 * 30,
+      httpOnly: true,
     });
     res.redirect('/');
   } else {
