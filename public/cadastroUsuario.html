@@ -20,7 +20,7 @@
           <p>Blog Node</p>
         </div>
       </a>
-      <p class="ultimoAcesso">Ultimo acesso: asdjalkdjsklda</p>
+      <p class="ultimoAcesso">Ultimo acesso:</p>
       <nav>
         <a href="/cadastroUsuario">Cadastro de Usuários</a>
         <a href="/chat">Bate-papo</a>
@@ -76,5 +76,13 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
+    <script>
+      fetch('/get-cookie')
+        .then((response) => response.json())
+        .then((data) => {
+          let pElement = document.querySelector('.ultimoAcesso');
+          pElement.innerHTML = `Ultimo acesso: ${data}`;
+        });
+    </script>
   </body>
 </html>

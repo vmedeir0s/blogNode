@@ -1,13 +1,28 @@
 import express from 'express';
 import path from 'path';
 import session from 'express-session';
+import cookieParser from 'cookie-parser';
 
 const PORT = 3000;
 
 const app = express();
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
+app.use(
+  session({
+    secret: 'MeuTok3nSecret0',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      secure: false,
+      httpOnly: false,
+      maxAge: 1000 * 60 * 30,
+    },
+  })
+);
+
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '/public')));
 
@@ -43,6 +58,14 @@ function validarDataNascimento(data) {
   return true; // Data válida
 }
 
+function verificaAutenticacao(req, res, next) {
+  if (req.session.usuarioLogado) {
+    next();
+  } else {
+    res.redirect('/login');
+  }
+}
+
 app.get('/login', (req, res) => {
   res.redirect('/login.html');
 });
@@ -50,6 +73,10 @@ app.get('/login', (req, res) => {
 app.post('/login', (req, res) => {
   const { nome, senha } = req.body;
   if (nome == 'admin' && senha == '123') {
+    req.session.usuarioLogado = true;
+    res.cookie('ultimoAcesso', new Date().toDateString(), {
+      maxAge: 1000 * 60 * 60 * 24 * 30,
+    });
     res.redirect('/');
   } else {
     res.send(`
@@ -116,17 +143,18 @@ app.post('/login', (req, res) => {
   }
 });
 
-app.get('/cadastroUsuario', (req, res) => {
+app.get('/cadastroUsuario', verificaAutenticacao, (req, res) => {
   res.redirect('/cadastroUsuario.html');
 });
 
-app.post('/cadastrarUsuario', (req, res) => {
+app.post('/cadastrarUsuario', verificaAutenticacao, (req, res) => {
   const { nome, date, nick } = req.body;
   if (nome.length > 3 && validarDataNascimento(date) && nick.length > 3) {
     const user = { nome, date, nick };
     usuarios_DB.push(user);
     res.redirect('/listarUsuarios');
   } else {
+    const ultimoAcesso = req.cookies['ultimoAcesso'];
     res.write(`
       <!DOCTYPE html>
       <html lang="pt-br">
@@ -150,7 +178,7 @@ app.post('/cadastrarUsuario', (req, res) => {
                 <p>Blog Node</p>
               </div>
             </a>
-            <p class="ultimoAcesso">Ultimo acesso: asdjalkdjsklda</p>
+            <p class="ultimoAcesso">Ultimo acesso: ${ultimoAcesso}</p>
             <nav>
               <a href="/cadastroUsuario">Cadastro de Usuários</a>
               <a href="/chat">Bate-papo</a>
@@ -231,7 +259,8 @@ app.post('/cadastrarUsuario', (req, res) => {
   res.end();
 });
 
-app.get('/listarUsuarios', (req, res) => {
+app.get('/listarUsuarios', verificaAutenticacao, (req, res) => {
+  const ultimoAcesso = req.cookies['ultimoAcesso'];
   res.write(`
       <!DOCTYPE html>
       <html lang="pt-br">
@@ -255,7 +284,7 @@ app.get('/listarUsuarios', (req, res) => {
                 <p>Blog Node</p>
               </div>
             </a>
-            <p class="ultimoAcesso">Ultimo acesso: asdjalkdjsklda</p>
+            <p class="ultimoAcesso">Ultimo acesso: ${ultimoAcesso}</p>
             <nav>
               <a href="/cadastroUsuario">Cadastro de Usuários</a>
               <a href="/chat">Bate-papo</a>
@@ -308,7 +337,8 @@ app.get('/listarUsuarios', (req, res) => {
   res.end();
 });
 
-app.get('/chat', (req, res) => {
+app.get('/chat', verificaAutenticacao, (req, res) => {
+  const ultimoAcesso = req.cookies['ultimoAcesso'];
   res.write(`
     <!DOCTYPE html>
     <html lang="pt-br">
@@ -332,7 +362,7 @@ app.get('/chat', (req, res) => {
               <p>Blog Node</p>
             </div>
           </a>
-          <p class="ultimoAcesso">Ultimo acesso: ${10}</p>
+          <p class="ultimoAcesso">Ultimo acesso: ${ultimoAcesso}</p>
           <nav>
             <a href="/cadastroUsuario">Cadastro de Usuários</a>
             <a href="/chat">Bate-papo</a>
@@ -404,7 +434,7 @@ app.get('/chat', (req, res) => {
   res.end();
 });
 
-app.post('/postarMensagem', (req, res) => {
+app.post('/postarMensagem', verificaAutenticacao, (req, res) => {
   const { user, message } = req.body;
   if (user && message) {
     const msg = {
@@ -415,6 +445,7 @@ app.post('/postarMensagem', (req, res) => {
     messages_DB.push(msg);
     res.redirect('/chat');
   } else {
+    const ultimoAcesso = req.cookies[ultimoAcesso];
     res.write(`
       <!DOCTYPE html>
       <html lang="pt-br">
@@ -438,7 +469,7 @@ app.post('/postarMensagem', (req, res) => {
                 <p>Blog Node</p>
               </div>
             </a>
-            <p class="ultimoAcesso">Ultimo acesso: ${10}</p>
+            <p class="ultimoAcesso">Ultimo acesso: ${ultimoAcesso}</p>
             <nav>
               <a href="/cadastroUsuario">Cadastro de Usuários</a>
               <a href="/chat">Bate-papo</a>
@@ -513,7 +544,13 @@ app.post('/postarMensagem', (req, res) => {
   }
 });
 
-app.get('/', (req, res) => {
+app.get('/get-cookie', (req, res) => {
+  const ultimoAcesso = req.cookies['ultimoAcesso'];
+  res.json(ultimoAcesso);
+});
+
+app.get('/', verificaAutenticacao, (req, res) => {
+  const ultimoAcesso = req.cookies['ultimoAcesso'];
   res.send(`
     <!DOCTYPE html>
     <html lang="pt-br">
@@ -537,7 +574,7 @@ app.get('/', (req, res) => {
               <p>Blog Node</p>
             </div>
           </a>
-          <p class="ultimoAcesso">Ultimo acesso: ${10}</p>
+          <p class="ultimoAcesso">Ultimo acesso: ${ultimoAcesso}</p>
           <nav>
             <a href="/cadastroUsuario">Cadastro de Usuários</a>
             <a href="/chat">Bate-papo</a>
@@ -564,6 +601,11 @@ app.get('/', (req, res) => {
       </body>
     </html>  
   `);
+});
+
+app.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.redirect('/login.html');
 });
 
 app.listen(PORT, () => {
