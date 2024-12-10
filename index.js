@@ -544,7 +544,7 @@ app.post('/postarMensagem', verificaAutenticacao, (req, res) => {
   }
 });
 
-app.get('/get-cookie', (req, res) => {
+app.get('/get-cookie', verificaAutenticacao, (req, res) => {
   const ultimoAcesso = req.cookies['ultimoAcesso'];
   res.json(ultimoAcesso);
 });
