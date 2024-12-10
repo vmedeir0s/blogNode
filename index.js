@@ -2,7 +2,7 @@ import express from 'express';
 import path from 'path';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
-import { MemoryStore } from 'express-session';
+import cookieSession from 'cookie-session';
 
 const PORT = 3000;
 
@@ -10,7 +10,7 @@ const app = express();
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 app.use(
-  session({
+  cookieSession({
     secret: 'tok3nSecret0',
     resave: false,
     saveUninitialized: true,
@@ -19,9 +19,6 @@ app.use(
       httpOnly: true,
       maxAge: 1000 * 60 * 30,
     },
-    store: new MemoryStore({
-      checkPeriod: 1000 * 60 * 30,
-    }),
   })
 );
 
@@ -609,7 +606,7 @@ app.get('/', verificaAutenticacao, (req, res) => {
 });
 
 app.get('/logout', (req, res) => {
-  req.session.destroy();
+  req.session = null;
   res.redirect('/login.html');
 });
 
