@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'path';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
+import { MemoryStore } from 'express-session';
 
 const PORT = 3000;
 
@@ -18,6 +19,9 @@ app.use(
       httpOnly: true,
       maxAge: 1000 * 60 * 30,
     },
+    store: new MemoryStore({
+      checkPeriod: 1000 * 60 * 30,
+    }),
   })
 );
 
