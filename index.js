@@ -7,7 +7,6 @@ import cookieSession from 'cookie-session';
 const PORT = 3000;
 
 const app = express();
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 app.use(
   cookieSession({
@@ -504,7 +503,7 @@ app.post('/postarMensagem', verificaAutenticacao, (req, res) => {
                   </div>
                   <div>
                     <label for="message">Mensagem</label>
-                    <input type="text" id="message" />
+                    <input type="text" id="message" name="message"/>
                   </div>
                   
                 </div>
