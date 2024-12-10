@@ -12,7 +12,7 @@ app.use(
   session({
     secret: 'tok3nSecret0',
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     cookie: {
       secure: false,
       httpOnly: true,
@@ -24,7 +24,7 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, '/public')));
+app.use(express.static(path.join(process.cwd(), 'pages/public')));
 
 var usuarios_DB = [];
 var messages_DB = [];
