@@ -15,14 +15,14 @@ app.use(
     saveUninitialized: true,
     cookie: {
       secure: false,
-      httpOnly: false,
+      httpOnly: true,
       maxAge: 1000 * 60 * 30,
     },
   })
 );
 
-app.use(express.json());
 app.use(cookieParser());
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '/public')));
 
@@ -62,7 +62,7 @@ function verificaAutenticacao(req, res, next) {
   if (req.session.usuarioLogado) {
     next();
   } else {
-    res.redirect('/login');
+    res.redirect('/login.html');
   }
 }
 
@@ -147,7 +147,7 @@ app.get('/cadastroUsuario', verificaAutenticacao, (req, res) => {
   res.redirect('/cadastroUsuario.html');
 });
 
-app.post('/cadastrarUsuario', (req, res) => {
+app.post('/cadastrarUsuario', verificaAutenticacao, (req, res) => {
   const { nome, date, nick } = req.body;
   if (nome.length > 3 && validarDataNascimento(date) && nick.length > 3) {
     const user = { nome, date, nick };
@@ -434,7 +434,7 @@ app.get('/chat', verificaAutenticacao, (req, res) => {
   res.end();
 });
 
-app.post('/postarMensagem', (req, res) => {
+app.post('/postarMensagem', verificaAutenticacao, (req, res) => {
   const { user, message } = req.body;
   if (user && message) {
     const msg = {
