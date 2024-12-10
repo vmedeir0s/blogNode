@@ -12,9 +12,9 @@ app.use(
   session({
     secret: 'tok3nSecret0',
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
-      secure: false,
+      secure: true,
       httpOnly: true,
       maxAge: 1000 * 60 * 30,
     },
