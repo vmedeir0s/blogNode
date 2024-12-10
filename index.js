@@ -10,7 +10,7 @@ const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 app.use(
   session({
-    secret: 'MeuTok3nSecret0',
+    secret: 'tok3nSecret0',
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -74,7 +74,7 @@ app.post('/login', (req, res) => {
   const { nome, senha } = req.body;
   if (nome == 'admin' && senha == '123') {
     req.session.usuarioLogado = true;
-    res.cookie('ultimoAcesso', new Date().toDateString(), {
+    res.cookie('ultimoAcesso', new Date().toLocaleString(), {
       maxAge: 1000 * 60 * 60 * 24 * 30,
     });
     res.redirect('/');
